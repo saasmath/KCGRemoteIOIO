@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package net.majorkernelpanic.example1;
+package com.robotside;
 
 public final class R {
     public static final class attr {
