@@ -7,14 +7,14 @@ import java.net.InetAddress;
 
 import android.app.Activity;
 import android.util.Log;
-
 import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.IOIO;
 import ioio.lib.api.IOIOFactory;
 import ioio.lib.api.PwmOutput;
 import ioio.lib.api.exception.ConnectionLostException;
+import ioio.lib.util.AbstractIOIOActivity;
 
-public class ControlThread extends Thread{
+public class ControlThread extends  Thread {
 
 	/** Subclasses should use this field for controlling the IOIO. */
 	protected IOIO ioio_;

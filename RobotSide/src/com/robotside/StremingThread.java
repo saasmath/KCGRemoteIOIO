@@ -1,50 +1,50 @@
 package com.robotside;
 
-import com.robotside.R;
+import net.majorkernelpanic.streaming.Session;
 import net.majorkernelpanic.streaming.SessionBuilder;
 import net.majorkernelpanic.streaming.gl.SurfaceView;
 import net.majorkernelpanic.streaming.rtsp.RtspServer;
+import net.majorkernelpanic.streaming.video.VideoQuality;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ActivityInfo;
+import android.graphics.drawable.GradientDrawable.Orientation;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import android.view.WindowManager;
 
+/**
+ * A straightforward example of how to use the RTSP server included in
+ * libstreaming.
+ */
 public class StremingThread extends Thread {
+
+	private Activity _app;
 	private SurfaceView mSurfaceView;
-	Context _context;
+	public Session session;
 
-	public StremingThread(Context context) {
+	public StremingThread(Activity app) {
 
-		if (_context != null) {
-			_context = context;
-			
-			
-			//mSurfaceView = (SurfaceView) _context.findViewById(R.id.surface);
-			Log.d("Streaming", "Streaming thread created");
-			// Sets the port of the RTSP server to 1234
-			Editor editor = PreferenceManager.getDefaultSharedPreferences(_context)
-					.edit();
-			editor.putString(RtspServer.KEY_PORT, String.valueOf(1234));
-			editor.commit();
-
-			// Configures the SessionBuilder
-			SessionBuilder.getInstance() //.setSurfaceView(mSurfaceView)
-					.setPreviewOrientation(90)
-					.setContext(_context)
-					.setAudioEncoder(SessionBuilder.AUDIO_NONE)
-					.setVideoEncoder(SessionBuilder.VIDEO_H264);
-		}
+		mSurfaceView = (SurfaceView) app.findViewById(R.id.surface);
+		_app = app;
+		// Configures the SessionBuilder
+		session = SessionBuilder.getInstance()
+				.setSurfaceView(mSurfaceView).setPreviewOrientation(90)
+				.setContext(app.getApplicationContext())
+				.setAudioEncoder(SessionBuilder.AUDIO_NONE)
+				.setVideoEncoder(SessionBuilder.VIDEO_H264)
+				.setVideoQuality(new VideoQuality(320 ,240,15,500000)).build();
 
 	}
 
-	public void StartService() {
+	@Override
+	public void run() {
 		// Starts the RTSP server
-		if (_context != null)
-			_context.startService(new Intent(_context, RtspServer.class));
-		else
-			Log.e("Streaming",
-					"Cannot start streaming service the activity referenced equals null");
+				_app.startService(new Intent(_app, RtspServer.class));
+
+		super.run();
+
+		
 	}
 }
